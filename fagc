@@ -1,0 +1,54 @@
+#!/bin/bash
+
+banner() {
+echo "+---------------------------------------+"           
+echo "|            ┏━━━┓╋╋╋╋╋┏━━━┓            |"
+echo "|            ┃┏━━┛╋╋╋╋╋┃┏━┓┃            |"
+echo "|            ┃┗━━┳━━┳━━┫┃╋┗┛            |"
+echo "|            ┃┏━━┫┏┓┃┏┓┃┃╋┏┓            |"
+echo "|            ┃┃╋╋┃┏┓┃┗┛┃┗━┛┃            |"
+echo "|            ┗┛╋╋┗┛┗┻━┓┣━━━┛            |"
+echo "|            ╋╋╋╋╋╋╋┏━┛┃                |"
+echo "|            ╋╋╋╋╋╋╋┗━━┛                |"
+echo "+---------------------------------------+"
+echo "| Fast get certificate script with Acme |"
+echo "+---------------------------------------+"
+}
+getSSL(){
+  banner
+  echo "Enter Your Email (default : xxx@xxx.com - Press Enter) : "
+  read Email
+if [$Email == ""]; then
+  Email="xxx@xxx.com"
+fi
+  echo "Enter Your Domain :"
+  read Domain
+  echo "Enter a dirtory name for make it (just enter a name - Like mydomain) :"
+  read DirName
+if [ -d "/root/$DirName" ]; then
+    echo "$DirName Directory exists."
+    echo "Try Again"
+    exit 0
+else
+  clear
+  mkdir "$DirName"
+  banner
+  ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+  ~/.acme.sh/acme.sh --register-account -m "$Email"
+  ~/.acme.sh/acme.sh --issue -d "$Domain" --standalone
+  ~/.acme.sh/acme.sh --installcert -d "$Domain" --key-file /root/"$DirName"/private.key --fullchain-file /root/"$DirName"/cert.crt
+fi
+}
+
+clear
+banner
+FILE=~/.acme.sh/acme.sh
+if [ -f "$FILE" ]; then
+    clear
+    getSSL
+else 
+    echo "Install Acme..."
+    curl https://get.acme.sh | sh
+    clear
+    getSSL
+fi
