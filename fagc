@@ -1,0 +1,115 @@
+#!/bin/bash
+
+RED="\033[31m"
+GREEN="\033[32m"
+YELLOW="\033[33m"
+PLAIN='\033[0m'
+
+red(){
+    echo -e "\033[31m\033[01m$1\033[0m"
+}
+
+green(){
+    echo -e "\033[32m\033[01m$1\033[0m"
+}
+
+yellow(){
+    echo -e "\033[33m\033[01m$1\033[0m"
+}
+
+REGEX=("debian" "ubuntu" "centos|red hat|kernel|oracle linux|alma|rocky" "fedora")
+RELEASE=("Debian" "Ubuntu" "CentOS" "Fedora")
+PACKAGE_UPDATE=("apt update" "apt update" "yum -y update" "yum -y update")
+PACKAGE_INSTALL=("apt -y install" "apt -y install" "yum -y install" "yum -y install")
+
+CMD=("$(grep -i pretty_name /etc/os-release 2>/dev/null | cut -d \" -f2)" "$(hostnamectl 2>/dev/null | grep -i system | cut -d : -f2)" "$(lsb_release -sd 2>/dev/null)" "$(grep -i description /etc/lsb-release 2>/dev/null | cut -d \" -f2)" "$(grep . /etc/redhat-release 2>/dev/null)" "$(grep . /etc/issue 2>/dev/null | cut -d \\ -f1 | sed '/^[ ]*$/d')")
+
+for i in "${CMD[@]}"; do
+    SYS="$i"
+    if [[ -n $SYS ]]; then
+        break
+    fi
+done
+
+for ((int = 0; int < ${#REGEX[@]}; int++)); do
+    if [[ $(echo "$SYS" | tr '[:upper:]' '[:lower:]') =~ ${REGEX[int]} ]]; then
+        SYSTEM="${RELEASE[int]}"
+        if [[ -n $SYSTEM ]]; then
+            break
+        fi
+    fi
+done
+
+[[ -z $SYSTEM ]] && red "Does not support the current OS, please use a supported one" && exit 1
+
+install_requisites(){
+  ${PACKAGE_UPDATE[int]}
+  ${PACKAGE_INSTALL[int]} curl socat
+}
+
+banner() {
+echo "+---------------------------------------+"           
+echo "|            ┏━━━┓╋╋╋╋╋┏━━━┓            |"
+echo "|            ┃┏━━┛╋╋╋╋╋┃┏━┓┃            |"
+echo "|            ┃┗━━┳━━┳━━┫┃╋┗┛            |"
+echo "|            ┃┏━━┫┏┓┃┏┓┃┃╋┏┓            |"
+echo "|            ┃┃╋╋┃┏┓┃┗┛┃┗━┛┃            |"
+echo "|            ┗┛╋╋┗┛┗┻━┓┣━━━┛            |"
+echo "|            ╋╋╋╋╋╋╋┏━┛┃                |"
+echo "|            ╋╋╋╋╋╋╋┗━━┛                |"
+echo "+---------------------------------------+"
+echo "| Fast get certificate script with Acme |"
+echo "+---------------------------------------+"
+}
+
+getSSL(){
+  banner
+
+  read -rp "Please enter your email (leave empty to automatically generate a fake email) : " Email
+  if [[ -z $Email ]]; then
+      autoEmail=$(date +%s%N | md5sum | cut -c 1-16)
+      Email=$autoEmail@gmail.com
+      yellow "Skipped entering email, using a fake email address: $Email"
+  fi
+
+  read -rp "Please enter your domain : " Domain
+  [[ -z $Domain ]] && red "Given domain is invalid. Please use example.com or sub.example.com , run agin" && exit 0
+  read -rp green "The given domain name： $Domain , Is it OK ? ( y or n ) : " Status
+
+  if [[ "$Status" == "y" ]]; then
+    read -rp "Enter a dirtory name (The directory should not exist) :" DirName
+    if [ -d "/root/$DirName" ]; then
+      red "$DirName Directory exists. run agin"
+      exit 0
+    else
+      clear
+      mkdir "$DirName"
+      banner
+      ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+      ~/.acme.sh/acme.sh --register-account -m "$Email"
+      ~/.acme.sh/acme.sh --issue -d "$Domain" --standalone
+      clear
+      banner
+      ~/.acme.sh/acme.sh --installcert -d "$Domain" --key-file /root/"$DirName"/private.key --fullchain-file /root/"$DirName"/cert.crt
+    fi
+  elif [[ "$Status" == "n" ]]; then
+    red "OK, run agin" && exit 0
+  else
+    red "You can just enter y or n, run agin" && exit 0
+  fi
+}
+
+clear
+banner
+[[ $EUID -ne 0 ]] && red "Note: Please run the script as the root user" && exit 0
+install_requisites
+FILE=~/.acme.sh/acme.sh
+if [ -f "$FILE" ]; then
+    clear
+    getSSL
+else 
+    yellow "Install Acme..."
+    curl https://get.acme.sh | sh
+    clear
+    getSSL
+fi
