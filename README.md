@@ -2,7 +2,7 @@
 
 ## Single Command Donwload and Run FagC
 ```
-bash <(curl -LO https://raw.githubusercontent.com/sudospaes/FagC/main/fagc)
+curl -LO https://raw.githubusercontent.com/sudospaes/FagC/main/fagc) && bash fagc
 ```
 
 ## Manual Donwload & Run FagC
@@ -15,5 +15,5 @@ curl -LO https://raw.githubusercontent.com/sudospaes/FagC/main/fagc
 2. Run FagC script :
 ```
 chmod +x fagc
-sh fagc
+bash fagc
 ```
