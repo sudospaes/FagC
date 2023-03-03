@@ -44,7 +44,7 @@ done
 
 install_requisites(){
        ${PACKAGE_UPDATE[int]}
-       ${PACKAGE_INSTALL[int]} curl socat cron
+       ${PACKAGE_INSTALL[int]} curl socat cron crontab
 }
 
 banner() {
@@ -110,7 +110,7 @@ if [ -f "$FILE" ]; then
 else 
     yellow "Install Acme..."
     curl https://get.acme.sh | sh
-    sleep 2
+    sleep 5
     clear
     getSSL
 fi
