@@ -2,7 +2,7 @@
 
 ## Single Command Donwload and Run FagC
 ```
-wget -LO https://raw.githubusercontent.com/sudospaes/FagC/main/fagc) && bash fagc
+curl -LO https://raw.githubusercontent.com/sudospaes/FagC/main/fagc && bash fagc
 ```
 
 ## Manual Donwload & Run FagC
