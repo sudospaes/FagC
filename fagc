@@ -82,7 +82,7 @@ getSSL(){
   read -rp green "The given domain name： '$Domain' , Is it OK ? ( y or n ) : " Status
 
   if [[ "$Status" == "y" ]]; then
-    read -rp "Enter a dirtory name (The directory should not exist) :" DirName
+    read -rp "Enter a dirtory name (The directory should not exist) : " DirName
     if [ -d "/root/$DirName" ]; then
       red "$DirName Directory exists. run agin"
       exit 0
