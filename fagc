@@ -43,8 +43,21 @@ done
 [[ -z $SYSTEM ]] && red "Does not support the current OS, please use a supported one" && exit 1
 
 install_requisites(){
-  ${PACKAGE_UPDATE[int]}
-  ${PACKAGE_INSTALL[int]} curl socat
+  if [[ ! $SYSTEM == "CentOS" ]]; then
+        ${PACKAGE_UPDATE[int]}
+        ${PACKAGE_INSTALL[int]} curl socat
+    fi
+    if [[ $SYSTEM == "CentOS" ]]; then
+        ${PACKAGE_UPDATE[int]}
+        ${PACKAGE_INSTALL[int]} cronie
+        systemctl start crond
+        systemctl enable crond
+    else
+        ${PACKAGE_UPDATE[int]}
+        ${PACKAGE_INSTALL[int]} cron
+        systemctl start cron
+        systemctl enable cron
+    fi
 }
 
 banner() {
@@ -110,6 +123,7 @@ if [ -f "$FILE" ]; then
 else 
     yellow "Install Acme..."
     curl https://get.acme.sh | sh
+    sleep 2
     clear
     getSSL
 fi
