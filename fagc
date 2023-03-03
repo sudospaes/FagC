@@ -74,7 +74,7 @@ getSSL(){
 
   read -rp "Please enter your domain : " Domain
   #[[ -z $Domain ]] && red "Given domain is invalid. Please use example.com or sub.example.com , run agin" && exit 0
-  read -rp green "The given domain name： $Domain , Is it OK ? ( y or n ) : " Status
+  read -rp green "The given domain name： '$Domain' , Is it OK ? ( y or n ) : " Status
 
   if [[ "$Status" == "y" ]]; then
     read -rp "Enter a dirtory name (The directory should not exist) :" DirName
