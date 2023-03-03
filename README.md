@@ -17,7 +17,7 @@ For Debian Base : apt install curl socat
 
 3. Download FagC script :
 ```
-curl -LO https://github.com/sudospaes/FagC/blob/main/fagc
+curl -LO https://raw.githubusercontent.com/sudospaes/FagC/main/fagc
 ```
 
 4. Run FagC script :
