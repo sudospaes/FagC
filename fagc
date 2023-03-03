@@ -16,11 +16,8 @@ echo "+---------------------------------------+"
 }
 getSSL(){
   banner
-  echo "Enter Your Email (default : xxx@xxx.com - Press Enter) : "
+  echo "Enter Your Email : "
   read Email
-if [$Email == ""]; then
-  Email="xxx@xxx.com"
-fi
   echo "Enter Your Domain :"
   read Domain
   echo "Enter a dirtory name for make it (just enter a name - Like mydomain) :"
