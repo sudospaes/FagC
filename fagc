@@ -36,6 +36,8 @@ else
   ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
   ~/.acme.sh/acme.sh --register-account -m "$Email"
   ~/.acme.sh/acme.sh --issue -d "$Domain" --standalone
+  clear
+  banner
   ~/.acme.sh/acme.sh --installcert -d "$Domain" --key-file /root/"$DirName"/private.key --fullchain-file /root/"$DirName"/cert.crt
 fi
 }
