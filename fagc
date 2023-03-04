@@ -78,14 +78,14 @@ getSSL(){
   fi
 
   read -rp "Please enter your domain : " Domain
-  [[ -z $Domain ]] && red "Given domain is invalid. Please use example.com or sub.example.com , run agin" && exit 0
+  [[ -z $Domain ]] && red "Given domain is invalid. Please use example.com or sub.example.com , run again" && exit 0
   green "The given domain name： $Domain" 
   read -rp "Is it OK ? [ y or n ] : " Status
 
   if [[ "$Status" == "y" ]]; then
     read -rp "Enter a dirtory name (The directory should not exist) : " DirName
     if [ -d "/root/$DirName" ]; then
-      red "$DirName Directory exists. run agin"
+      red "$DirName Directory exists. run again"
       exit 0
     else
       clear
@@ -101,7 +101,7 @@ getSSL(){
   elif [[ "$Status" == "n" ]]; then
     red "OK, run agin" && exit 0
   else
-    red "You can just enter y or n, run agin" && exit 0
+    red "You can just enter y or n, run again" && exit 0
   fi
 }
 
