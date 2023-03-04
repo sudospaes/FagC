@@ -79,7 +79,7 @@ getSSL(){
 
   read -rp "Please enter your domain : " Domain
   [[ -z $Domain ]] && red "Given domain is invalid. Please use example.com or sub.example.com , run agin" && exit 0
-  read -rp green "The given domain name： $Domain" 
+  green "The given domain name： $Domain" 
   read -rp yellow "Is it OK ? [ y or n ] : " Status
 
   if [[ "$Status" == "y" ]]; then
