@@ -83,7 +83,7 @@ getSSL(){
   read -rp "Is it OK ? [ y or n ] : " Status
 
   if [[ "$Status" == "y" ]]; then
-    read -rp "Enter a dirtory name (The directory should not exist) : " DirName
+    read -rp "Enter a directory name (The directory should not exist) : " DirName
     if [ -d "/root/$DirName" ]; then
       red "$DirName Directory exists. run again"
       exit 0
