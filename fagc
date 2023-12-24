@@ -44,7 +44,7 @@ done
 
 install_requisites(){
     ${PACKAGE_UPDATE[int]}
-    ${PACKAGE_INSTALL[int]} curl socat
+    ${PACKAGE_INSTALL[int]} curl socat cron
     if [[ $SYSTEM == "CentOS" ]]; then
         ${PACKAGE_INSTALL[int]} cronie
     elif [[ $SYSTEM == "Fedora" ]]; then
